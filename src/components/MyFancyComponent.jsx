@@ -15,19 +15,43 @@ const MyMapComponent = compose(
 )((props) =>
   <GoogleMap
     defaultZoom={14}
-    defaultCenter={{ lat: 30.386407, lng: -97.888152 }}
+    defaultCenter={{ lat: 37.774929, lng: -122.419416 }}
+    // defaultCenter={{ lat: this.props.currentLocation.lat, lng: this.props.currentLocation.lng }}
   >
-    {props.isMarkerShown && <Marker position={{ lat: 30.386407, lng: -97.888152 }} onClick={props.onMarkerClick} />}
+    {props.isMarkerShown && <Marker position={{ lat: 37.774929, lng: -122.419416 }} onClick={props.onMarkerClick} />}
   </GoogleMap>
 );
 
 class MyFancyComponent extends React.PureComponent {
   state = {
     isMarkerShown: false,
+    currentLocation: {
+      lat: 37.774929,
+      lng: -122.419416
+    }
   }
 
   componentDidMount() {
-    this.delayedShowMarker()
+    // this.geoFindMe()
+    // this.delayedShowMarker()
+   console.log('this.state', this.state);
+
+    if (navigator && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            console.log('pos.coords', pos.coords);
+            console.log('pos.coords.latitude', pos.coords.latitude);
+            // const coords = pos.coords;
+            this.setState({
+                currentLocation: {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude
+                }
+            })
+            console.log('current lat and lng', this.state.currentLocation);
+        })
+    }
+    // this.delayedShowMarker()
+
   }
 
   delayedShowMarker = () => {
@@ -42,10 +66,12 @@ class MyFancyComponent extends React.PureComponent {
   }
 
   render() {
+    console.log('this.state.currentLocation in render', this.state.currentLocation);
     return (
       <MyMapComponent
         isMarkerShown={this.state.isMarkerShown}
         onMarkerClick={this.handleMarkerClick}
+        currentLocation={this.state.currentLocation}
       />
     )
   }
