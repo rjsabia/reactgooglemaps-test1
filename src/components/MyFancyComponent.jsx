@@ -2,6 +2,7 @@ import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import { API_Maps_KEY } from './secrets';
+import MapStyleDark from './MapStyleDark.json';
 
 const MyMapComponent = compose(
   withProps({
@@ -15,8 +16,9 @@ const MyMapComponent = compose(
 )((props) =>
   <GoogleMap
     defaultZoom={14}
-    defaultCenter={{ lat: 37.774929, lng: -122.419416 }}
-    // defaultCenter={{ lat: this.props.currentLocation.lat, lng: this.props.currentLocation.lng }}
+    // defaultCenter={{ lat: 37.774929, lng: -122.419416 }}
+    center={{ lat: props.currentLocation.lat, lng: props.currentLocation.lng }}
+    defaultOptions={{ styles: MapStyleDark }}
   >
     {props.isMarkerShown && <Marker position={{ lat: 37.774929, lng: -122.419416 }} onClick={props.onMarkerClick} />}
   </GoogleMap>
